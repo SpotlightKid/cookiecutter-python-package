@@ -1,4 +1,5 @@
-# Python Package Cookiecutter Template
+Python Package Cookiecutter Template
+------------------------------------
 
 You want to start a new Python project? Then please use this project template.
 
@@ -26,7 +27,8 @@ Customize:
 Have fun!
 
 
-## TODO
+TODO
+----
 
 * Add pydocstyle configuration
 * Add pylint configuration
