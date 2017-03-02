@@ -11,7 +11,7 @@ at least cookiecutter version 1.4.0::
 
 Create the project structure::
 
-    $ cookiecutter https://github.com/SpotlightKid/python-package-cookiecutter.git
+    $ cookiecutter gh:SpotlightKid/python-package-cookiecutter
 
 Customize:
 
