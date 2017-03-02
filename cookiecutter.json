@@ -4,10 +4,10 @@
     "project_name": "My New Package",
     "repo_name": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
     "repo_user": "{{ cookiecutter.author_name|lower|replace(' ', '.') }}",
-    "repo_url": "git@gitlab.intern.galileo-press.de:galileo/{{ cookiecutter.repo_name }}",
+    "repo_url": "git@github.com:{{ cookiecutter.repo_user }}/{{ cookiecutter.repo_name }}.git",
     "package_name": "{{ cookiecutter.repo_name|lower|replace('-', '_') }}",
     "package_version": "0.1.0",
-    "project_description": "A cookiecutter template for Rheinwerk Python packages",
-    "project_url": "https://gitlab.intern.galileo-press.de/galileo/{{ cookiecutter.repo_name }}",
+    "project_description": "A cookiecutter template for bloat-free Python packages",
+    "project_url": "https://github.com/{{ cookiecutter.repo_user }}/{{ cookiecutter.repo_name }}",
     "license": "MIT License"
 }
