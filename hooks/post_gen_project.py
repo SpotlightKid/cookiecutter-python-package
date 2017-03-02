@@ -8,3 +8,4 @@ origin_url = "{{ cookiecutter.repo_url }}"
 
 call(['git', 'init'])
 call(['git', 'remote', 'add', 'origin', origin_url])
+call(['git', 'add', '-A'])
