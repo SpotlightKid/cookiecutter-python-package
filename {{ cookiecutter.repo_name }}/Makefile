@@ -1,15 +1,20 @@
 BROWSER ?= xdg-open
 PYTHON_PACKAGE = {{ cookiecutter.package_name }}
 TESTS_PACKAGE = tests
+REQUIREMENTS := $(patsubst %.in,%.txt,$(wildcard requirements/*.in))
 
 .PHONY: clean clean-test clean-pyc clean-build docs help
 .DEFAULT_GOAL := help
+
+requirements/%.txt: requirements/%.in
+	pip-compile --output-file $@ $<
 
 help:
 	@echo "Available Makefile targets:"
 	@echo
 	@echo "dist           builds source and wheel package"
 	@echo "install        install the package to the active Python environment"
+	@echo "requirements   pip-compile requirements file templates"
 	@echo "docs           generate Sphinx HTML documentation, including API docs"
 	@echo "test           run tests with the default Python version"
 	@echo "test-all       run tests on every Python version with tox"
@@ -22,73 +27,91 @@ help:
 	@echo "clean-build    remove Python file artifacts"
 	@echo "clean-pyc      remove Python file artifacts"
 
-clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+## remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-test
 
-clean-build: ## remove build artifacts
+## remove build artifacts
+clean-build:
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
-clean-pyc: ## remove Python file artifacts
+## remove Python file artifacts
+clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-clean-test: ## remove test and coverage artifacts
+## remove test and coverage artifacts
+clean-test:
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr reports/
 
-test: ## run tests quickly with the default Python
+## run tests quickly with the default Python
+test:
 	py.test -v tests/
 
-test-all: ## run tests on every Python version with tox
+## run tests on every Python version with tox
+test-all:
 	tox
 
-pylint: ## run style checks and static analysis with pylint
+## run style checks and static analysis with pylint
+pylint:
 	@-mkdir -p reports/
 	@-pylint -f html $(PYTHON_PACKAGE) $(TESTS_PACKAGE) > reports/pylint.html
 	@$(BROWSER) reports/pylint.html
 	pylint $(PYTHON_PACKAGE) $(TESTS_PACKAGE)
 
-flake8: ## run style checks and static analysis with flake8
+## run style checks and static analysis with flake8
+flake8:
 	flake8 $(PYTHON_PACKAGE) $(TESTS_PACKAGE)
 
-docstrings: ## check docstring presence and style conventions with pydocstyle
+## check docstring presence and style conventions with pydocstyle
+docstrings:
 	pydocstyle $(PYTHON_PACKAGE)
 
 lint: flake8 docstrings pylint
 
-coverage: ## check code coverage quickly with the default Python
+## check code coverage quickly with the default Python
+coverage:
 	@-mkdir -p reports/htmlcov
 	coverage run --source $(PYTHON_PACKAGE) `which py.test`
 	coverage report -m
 	@coverage html -d reports/htmlcov
 	@$(BROWSER) reports/htmlcov/index.html
 
-metrics: ## print code metrics with radon
+## print code metrics with radon
+metrics:
 	radon raw -s $(PYTHON_PACKAGE) $(TEST_PACKAGE)
 	radon cc -s $(PYTHON_PACKAGE) $(TEST_PACKAGE)
 	radon mi -s $(PYTHON_PACKAGE) $(TEST_PACKAGE)
 
-docs: ## generate Sphinx HTML documentation, including API docs
+## generate Sphinx HTML documentation, including API docs
+docs:
 	rm -f docs/$(PYTHON_PACKAGE).rst
 	sphinx-apidoc --no-toc -o docs/ $(PYTHON_PACKAGE)
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
-release: clean ## package and upload a release
+## pip-compile requirements templates
+requirements: $(REQUIREMENTS)
+
+## package and upload a release
+release: clean
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload
 
-dist: clean ## builds source and wheel package
+## builds source and wheel package
+dist: clean
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
 
-install: clean ## install the package to the active Python's site-packages
+## install the package to the active Python's site-packages
+install: clean
 	python setup.py install
