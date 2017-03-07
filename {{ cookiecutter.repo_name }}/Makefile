@@ -1,13 +1,9 @@
 BROWSER ?= xdg-open
 PYTHON_PACKAGE = {{ cookiecutter.package_name }}
 TESTS_PACKAGE = tests
-REQUIREMENTS := $(patsubst %.in,%.txt,$(wildcard requirements/*.in))
 
-.PHONY: clean clean-test clean-pyc clean-build docs help
+.PHONY: clean clean-test clean-pyc clean-build docs help requirements
 .DEFAULT_GOAL := help
-
-requirements/%.txt: requirements/%.in
-	pip-compile --output-file $@ $<
 
 help:
 	@echo "Available Makefile targets:"
@@ -99,7 +95,8 @@ docs:
 	$(BROWSER) docs/_build/html/index.html
 
 ## pip-compile requirements templates
-requirements: $(REQUIREMENTS)
+requirements:
+	$(MAKE) -C requirements all
 
 ## package and upload a release
 release: clean
