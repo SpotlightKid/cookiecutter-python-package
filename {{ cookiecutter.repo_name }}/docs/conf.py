@@ -61,7 +61,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'{{ cookiecutter.project_name }}'
-copyright = u"2016, Rheinwerk Verlag Gmbh, {{ cookiecutter.author_name }}"
+copyright = u"{% now 'utc', '%Y' %}, {{ cookiecutter.author_name }}"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
